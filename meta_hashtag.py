@@ -22,35 +22,34 @@ class Tweet:
     
     def parse_tweets(self):
         self.load_tweets()
-        clean_hashtags = []
         for tweet in self.hashtag:
             for word in tweet["text"].split():
                 yield word
             for word in tweet["profile"].split():
                 yield word
 
-    def get_all_hashtags(self,word):
-        word = parse_tweets()
-        if re.search("^#.*",word):
-            self.hashtags.append(word.rstrip(",;:.").lower())
-            return
-    
-    def get_unique_hashtags(self):
-        uniques = list(set(self.hashtags))
-        for unique in uniques:
-            yield unique
-
-    def update_hashtags(self,unique):
-        unique = self.get_unique_hashtags()
-        self.hashtag_count["hashtag"] = unique
-        for tag in self.hashtags:
-            if self.hashtag_count["hashtag"] == tag:
-                self.hashtag_count["count"] += 1
-        self.unique_hashtags.append(self.hashtag_count)
+    def get_all_hashtags(self):
+        for word in self.parse_tweets():
+            if re.search("^#.*",word):
+                self.hashtags.append(word.rstrip(",;:.").lower())
         return
+    
+    def update_hashtags(self):
+        uniques = list(set(self.hashtags))
+        uniques_generator = (unique for unique in uniques)
+        for unique in tqdm(uniques_generator):
+            self.hashtag_count["hashtag"] = unique
+            self.unique_hashtags.append(copy.copy(self.hashtag_count))
+
+    def count_hashtags(self):
+        uniques = (self.hashtag_count for self.hashtag_count in self.unique_hashtags)
+        for self.hashtag_count in tqdm(uniques):
+            for tag in self.hashtags:
+                if self.hashtag_count["hashtag"] == tag:
+                    self.hashtag_count["count"] += 1
 
     def print_hashtags(self):
-        pprint.pprint(sorted(self.unique_hashtags,key=lambda n: n["count"],reverse=True[0:99]))
+        pprint.pprint(sorted(self.unique_hashtags,key=lambda n: n["count"],reverse=True)[0:99])
 
     def secondary_hashtag(self):
         self.load_tweets()
@@ -65,3 +64,7 @@ class Tweet:
 
 if __name__ == "__main__":
     tweets = Tweet()
+    tweets.get_all_hashtags()
+    tweets.update_hashtags()
+    tweets.count_hashtags()
+    tweets.print_hashtags()

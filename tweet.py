@@ -64,3 +64,6 @@ class Tweet:
             for tweet in self.hashtag:
                 if re.search(secondary,tweet["text"],re.IGNORECASE) or re.search(secondary,tweet["profile"],re.IGNORECASE):
                     writer.writerow(tweet)
+
+tweets = Tweet()
+tweets.other_hashtags()
