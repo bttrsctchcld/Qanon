@@ -52,5 +52,16 @@ class Tweet:
     def print_hashtags(self):
         pprint.pprint(sorted(self.unique_hashtags,key=lambda n: n["count"],reverse=True[0:99]))
 
+    def secondary_hashtag(self):
+        self.load_tweets()
+        secondary = input("Which hashtag do you want to cross-reference? ")
+        with open("secondary.csv","w") as csvFile:
+            fieldnames = ['datetime','name','profile','followers','text','favorites','retweets','verified']
+            writer = csv.DictWriter(csvFile,fieldnames=fieldnames)
+            writer.writeheader()
+            for tweet in self.hashtag:
+                if re.search(secondary,tweet["text"],re.IGNORECASE) or re.search(secondary,tweet["profile"],re.IGNORECASE):
+                    writer.writerow(tweet)
+
 if __name__ == "__main__":
     tweets = Tweet()
