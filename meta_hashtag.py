@@ -1,5 +1,7 @@
-import json, csv, re, copy, pprint
+import logging, json, csv, re, copy, pprint
 from tqdm import tqdm
+
+logger = logging.getLogger()
 
 class Tweet:
     def __init__(self,hashtag=None):
@@ -16,8 +18,10 @@ class Tweet:
         try:
             with open("qanon.json","r") as file:
                 self.hashtag = json.loads(file.read())
-        except IOError:
-            print("Missing hashtag file.")
+        except IOError as e:
+            logging.error("Missing json file.",exc_info=True)
+            raise e
+        logger.info("Tweets loaded from json.")
         return self.hashtag
     
     def parse_tweets(self):
@@ -37,7 +41,7 @@ class Tweet:
     def update_hashtags(self):
         uniques = list(set(self.hashtags))
         uniques_generator = (unique for unique in uniques)
-        for unique in tqdm(uniques_generator):
+        for unique in uniques_generator:
             self.hashtag_count["hashtag"] = unique
             self.unique_hashtags.append(copy.copy(self.hashtag_count))
 
@@ -47,6 +51,8 @@ class Tweet:
             for tag in self.hashtags:
                 if self.hashtag_count["hashtag"] == tag:
                     self.hashtag_count["count"] += 1
+        logger.info("Hashtags counted per usage.")
+        return
 
     def print_hashtags(self):
         pprint.pprint(sorted(self.unique_hashtags,key=lambda n: n["count"],reverse=True)[0:99])

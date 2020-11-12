@@ -1,5 +1,7 @@
-import json, csv, re, copy, pprint
+import logging, json, csv, re, copy, pprint
 from tqdm import tqdm
+
+logger = logging.getLogger()
 
 class Tweet:
     def __init__(self,hashtag=None):
@@ -15,8 +17,10 @@ class Tweet:
         try:
             with open("qanon.json","r") as file:
                 self.hashtag = json.loads(file.read())
-        except IOError:
-            print("Missing hashtag file.")
+        except IOError as e:
+            logger.error("Missing json file.",exc_info=True)
+            raise e
+        logger.info("Tweets loaded from json.")
         return self.hashtag
     
     def get_unique_screennames(self):
@@ -38,6 +42,7 @@ class Tweet:
                     profile["count"] += 1
                     if profile["profile"] == None:
                         profile["profile"] = tweet["profile"]
+        logger.info("Hashtag usage-per-user counted.")
         return
 
     def print_users(self):
