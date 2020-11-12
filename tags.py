@@ -47,10 +47,14 @@ class Tweet:
 
     def count_hashtags(self):
         uniques = (self.hashtag_count for self.hashtag_count in self.unique_hashtags)
-        for self.hashtag_count in tqdm(uniques):
-            for tag in self.hashtags:
-                if self.hashtag_count["hashtag"] == tag:
-                    self.hashtag_count["count"] += 1
+        try:
+            for self.hashtag_count in tqdm(uniques):
+                for tag in self.hashtags:
+                    if self.hashtag_count["hashtag"] == tag:
+                        self.hashtag_count["count"] += 1
+        except KeyboardInterrupt:
+            logger.warning("Process terminated by user.")
+            raise SystemExit
         logger.info("Hashtags counted per usage.")
         return
 

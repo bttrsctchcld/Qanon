@@ -36,12 +36,16 @@ class Tweet:
 
     def match_updated_user(self):
         profiles = (profile for profile in self.users)
-        for profile in tqdm(profiles):
-            for tweet in self.hashtag:
-                if profile["name"] == tweet["name"]:
-                    profile["count"] += 1
-                    if profile["profile"] == None:
-                        profile["profile"] = tweet["profile"]
+        try:
+            for profile in tqdm(profiles):
+                for tweet in self.hashtag:
+                    if profile["name"] == tweet["name"]:
+                        profile["count"] += 1
+                        if profile["profile"] == None:
+                            profile["profile"] = tweet["profile"]
+        except KeyboardInterrupt:
+            logger.warning("Process terminated by user.")
+            raise SystemExit
         logger.info("Hashtag usage-per-user counted.")
         return
 
