@@ -18,9 +18,9 @@ class Tweet:
         try:
             with open("qanon.json","r") as file:
                 self.hashtag = json.loads(file.read())
-        except IOError as e:
+        except FileNotFoundError:
             logging.error("Missing json file.",exc_info=True)
-            raise e
+            raise
         logger.info("Tweets loaded from json.")
         return self.hashtag
     
