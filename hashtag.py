@@ -3,24 +3,19 @@ from config import create_api
 
 logger = logging.getLogger()
 
-def search_hashtag(api):
-    hashtag = input("Which hashtag? ")
-    for tweet in tweepy.Cursor(api.search,q=hashtag,count=100,tweet_mode="extended").items():
-        if not re.search("^RT @.*",tweet.full_text):
-            yield tweet._json
-
-def parse_hashtag():
-    api = create_api()
+def hashtag(api):
     try:
+        query = input("Which hashtag? ")
         with open('hashtag.json','w') as file:
-            for tweet in search_hashtag(api):
-                json.dumps(tweet)
+            hashtag = [tweet._json for tweet in tweepy.Cursor(api.search,q=query,count=100,tweet_mode="extended").items() if not re.search("^RT @.*",tweet.full_text)]
+            json.dump(hashtag,file)
     except KeyboardInterrupt:
         logger.warning("Process terminated by user.")
         raise SystemExit
 
 def main():
-    parse_hashtag()
+    api = create_api()
+    hashtag(api)
 
 if __name__ == "__main__":
     main()
