@@ -12,7 +12,7 @@ class Tweet:
 
     def load_tweets(self):
         try:
-            with open("stop.json","r") as file:
+            with open("hashtag.json","r") as file:
                 self.hashtag = json.loads(file.read())
         except FileNotFoundError:
             logging.error("Missing json file.",exc_info=True)

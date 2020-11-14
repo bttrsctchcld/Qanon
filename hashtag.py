@@ -5,7 +5,7 @@ logger = logging.getLogger()
 
 def hashtag(api):
     try:
-        query = input("Which hashtag? ")
+        query = input("Twitter search term: ")
         with open('hashtag.json','w') as file:
             hashtag = [tweet._json for tweet in tweepy.Cursor(api.search,q=query,count=100,tweet_mode="extended").items() if not re.search("^RT @.*",tweet.full_text)]
             json.dump(hashtag,file)
