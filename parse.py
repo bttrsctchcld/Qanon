@@ -19,6 +19,9 @@ class Tweet:
             raise
         return self.hashtag
 
+    """ reprocess large, two-dimensional tweet._json objects as smaller, 
+    one-dimensional dictionaries, preserving only the relevant key-value pairs """
+
     def process_tweets(self):
         self.load_tweets()
         for tweet in tqdm(self.hashtag):

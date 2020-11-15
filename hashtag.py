@@ -4,6 +4,8 @@ from config import create_api
 logger = logging.getLogger()
 
 def hashtag(api):
+    """ twitter api searches run more efficiently when pulling the full tweet._json object
+    rather than specifying the relevant fields in the list comp; do that post hoc in parse.py """
     try:
         query = input("Twitter search term: ")
         with open('hashtag.json','w') as file:
